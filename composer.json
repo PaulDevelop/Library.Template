@@ -1,0 +1,37 @@
+{
+    "name": "pauldevelop/library-template",
+    "description": "Library to parse pd:template files.",
+    "keywords": ["PaulDevelop", "library"],
+    "homepage": "https://github.com/pauldevelop/library.template",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rüdiger Scheumann",
+            "email": "info@pauldevelop.de",
+            "homepage": "http://pauldevelop.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "vendor-dir": "lib/vendor"
+    },
+    "require": {
+        "pauldevelop/library-common": "~1.0.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "phpdocumentor/phpdocumentor": "2.5.*@dev",
+        "squizlabs/php_codesniffer": "1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Com\\PaulDevelop\\Library\\Template\\": "src/class"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.0.x-dev"
+        }
+    }
+}

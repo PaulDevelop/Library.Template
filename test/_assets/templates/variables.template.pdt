@@ -1,0 +1,5 @@
+<pd:template>
+  <pd:layout>
+Variables: %variable%
+  </pd:layout>
+</pd:template>

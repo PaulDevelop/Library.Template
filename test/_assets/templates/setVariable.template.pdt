@@ -1,0 +1,6 @@
+<pd:template>
+  <pd:layout>
+    <pd:set name="variable" value="test" />
+Variable: %variable%
+  </pd:layout>
+</pd:template>

@@ -1,0 +1,8 @@
+<pd:template>
+  <pd:layout>
+Foreach:
+    <pd:foreach list="%list%" item="item">
+* %item.name%
+    </pd:foreach>
+  </pd:layout>
+</pd:template>

@@ -1,0 +1,19 @@
+{
+    "name": "Com.PaulDevelop.Library.Template",
+    "version": "0.0.1",
+    "description": "Library to parse pd:template files.",
+    "devDependencies": {
+        "grunt": "~0.4.2",
+        "grunt-contrib-watch": "~0.5.3",
+        "grunt-contrib-sass": "~0.6.0",
+        "grunt-contrib-compass": "~0.7.0",
+        "grunt-phpunit": "*",
+        "grunt-phpdocumentor": "*",
+        "grunt-phpcs": "*"
+    },
+    "keywords": [
+        "php library template parser"
+    ],
+    "author": "PaulDevelop",
+    "license": "MIT"
+}

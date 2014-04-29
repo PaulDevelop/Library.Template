@@ -1,0 +1,7 @@
+<pd:template>
+  <pd:layout>
+    <pd:if expression="%variable% == 42">
+If-Branch
+    </pd:if>
+  </pd:layout>
+</pd:template>
