@@ -276,25 +276,29 @@ class Template implements ITemplate
                     $currentTag .= $currentChar; // add <
 
                     // add text node to result
-                    $addNewLine = false;
+                    //$addNewLine = false;
 
                     // find first \n
                     $pos = strpos($currentText, "\n");
-                    if ($pos >= 0 && preg_match("/^[^\\S\n]*$/", substr($currentText, 0, $pos))) {
+                    if ($pos !== false && preg_match("/^[^\\S\n]*$/", substr($currentText, 0, $pos))) {
                         $currentText = substr($currentText, $pos + 1);
-                        $addNewLine = true;
+                        //$addNewLine = true;
                     }
 
                     // find last \n
                     $pos = strrpos($currentText, "\n");
-                    if ($pos >= 0 && preg_match("/^[^\\S\\n]*$/", substr($currentText, $pos + 1))) {
-                        $currentText = substr($currentText, 0, $pos);
-                        $addNewLine = true;
+                    if ($pos !== false && preg_match("/^[^\\S\\n]*$/", substr($currentText, $pos + 1))) {
+                        //var_dump($currentText);
+                        //echo $pos.":".ord(substr($currentText, $pos, 1)).PHP_EOL;
+                        $currentText = substr($currentText, 0, $pos + 1);
+                        //$currentText .= PHP_EOL;
+                        //$addNewLine = true;
+                        //var_dump($currentText);
                     }
 
-                    if ($addNewLine) {
-                        $currentText .= PHP_EOL;
-                    }
+                    //if ($addNewLine) {
+                    //    $currentText .= PHP_EOL;
+                    //}
                     $text = new Text($currentText, null); // .PHP_EOL
                     $result->Add($text);
                     $currentText = '';
