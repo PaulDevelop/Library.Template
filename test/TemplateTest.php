@@ -67,7 +67,12 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
             $item3
         );
         $template->bindVariable('list', $list);
+
+        //var_dump($template->process());
+        //die;
+
         $this->assertEquals("Foreach:\n* Item 1\n* Item 2\n* Item 3", trim($template->process()));
+        //$this->assertEquals("Foreach:\n* Item 1\n* Item 2\n* Item 3\n", $template->process());
     }
 
     // embed

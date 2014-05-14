@@ -189,12 +189,26 @@ class Template implements ITemplate
 
         // read layout
         $content = $this->processNodes($tree->getNode('template.layout'), $parentScopeVariables, 1)->Content;
-        $lines = preg_split('/\n/', $content, null, PREG_SPLIT_NO_EMPTY);
+        //$lines = preg_split('/\n/', $content, null, PREG_SPLIT_NO_EMPTY);
+        $lines = preg_split('/\n/', $content);
         $content = '';
+        $firstEmptyLine = false;
         foreach ($lines as $line) {
-            if (trim($line) != '') {
+            //if (trim($line) != '') {
+            //    $content .= $line.PHP_EOL;
+            //}
+
+            /*
+            if (!$firstEmptyLine || trim($line) != '') {
+                $firstEmptyLine = false;
                 $content .= $line.PHP_EOL;
             }
+
+            if (trim($line) == '') {
+                $firstEmptyLine = true;
+            }
+            */
+            $content .= $line.PHP_EOL;
         }
         $content = preg_replace('/\x{EF}\x{BB}\x{BF}/', '', $content); // remove BOMs
         $content = preg_replace('/\\\\%/', '%', $content); // remove \%
@@ -283,11 +297,78 @@ class Template implements ITemplate
                     $currentTag .= $currentChar; // add <
 
                     // add text node to result
-                    if (!empty($currentText)) {
+
+                    /*
+                    //if (!empty($currentText)) {
+//var_dump($currentText);
+
+                    var_dump($currentText);
+                    //if ( preg_match("/^\\s*?\\n(.*?)$/m", $currentText, $matches) ) {
+                    if ( preg_match("/^[^\\S\\n]*?((?:\\n.*))$/m", $currentText, $matches) ) {
+                        echo "YYYYYYYYYYYYYYYY".PHP_EOL;
+                        //var_dump($matches);
+                        var_dump($currentText);
+                        $currentText = $matches[1];
+                        $currentText = substr($currentText, 1, strlen($currentText)-1);
+                        var_dump($currentText);
+                        //    //var_dump($matches);
+                    }
+
+
+
+                        //if ( preg_match("/^(.*?)\\n\\s*?$/m", $currentText, $matches) ) {
+                        //if ( preg_match("/^(.*?\\n)\\s*?$/m", $currentText, $matches) ) {
+
+                        if ( preg_match("/^((?:.*\\n)+)[^\\S\\n]*?$/m", $currentText, $matches) ) {
+                            echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".PHP_EOL;
+                            var_dump($currentText);
+                            $currentText = $matches[1]; //."\n".PHP_EOL;
+                            $currentText = substr($currentText, 0, strlen($currentText)-1);
+                            var_dump($currentText);
+//                            //var_dump($matches);
+                        }
+                    */
+
+                    $flag = false;
+
+                    // find first \n
+                    $pos = strpos($currentText, "\n");
+                    if ( $pos >= 0 && preg_match("/^[^\\S\n]*$/", substr($currentText, 0, $pos))) {
+                        $currentText = substr($currentText, $pos + 1);
+                        //$currentText .= PHP_EOL;
+                    //    echo ">>> YYY".PHP_EOL;
+                        $flag = true;
+                    }
+
+                    //echo "YYYYY".PHP_EOL;
+                    //var_dump($currentText);
+
+                    // find last \n
+                    $pos = strrpos($currentText, "\n");
+                    if ( $pos >= 0 && preg_match("/^[^\\S\\n]*$/", substr($currentText, $pos + 1))) {
+                        $currentText = substr($currentText, 0, $pos);
+                        //$currentText .= PHP_EOL;
+                    //    echo ">>> XXX".PHP_EOL;
+                        $flag = true;
+                    }
+
+                    //echo "XXXXX".PHP_EOL;
+                    //var_dump($currentText);
+
+                    if ( $flag ) {
+                        $currentText .= PHP_EOL;
+                    }
+
+                        // if first char is new line => remove it
+                        //if ( substr($currentText, 0, 1) == "\n" ) {
+                        //    $currentText = substr($currentText, 1, strlen($currentText)-1);
+                        //}
+
+                        //$text = new Text($currentText, null); // .PHP_EOL
                         $text = new Text($currentText, null); // .PHP_EOL
                         $result->Add($text);
                         $currentText = '';
-                    }
+                    //}
                 } else {
                     $currentText .= $currentChar;
                 }
