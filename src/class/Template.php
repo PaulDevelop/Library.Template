@@ -281,15 +281,20 @@ class Template implements ITemplate
                     // find first \n
                     $pos = strpos($currentText, "\n");
                     if ($pos !== false && preg_match("/^[^\\S\n]*$/", substr($currentText, 0, $pos))) {
+
+                        //var_dump($currentText);
+                        //echo "yyy:".$pos.":".ord(substr($currentText, $pos, 1)).PHP_EOL;
+
                         $currentText = substr($currentText, $pos + 1);
                         //$addNewLine = true;
+                        //var_dump($currentText);
                     }
 
                     // find last \n
                     $pos = strrpos($currentText, "\n");
                     if ($pos !== false && preg_match("/^[^\\S\\n]*$/", substr($currentText, $pos + 1))) {
                         //var_dump($currentText);
-                        //echo $pos.":".ord(substr($currentText, $pos, 1)).PHP_EOL;
+                        //echo "XXX:".$pos.":".ord(substr($currentText, $pos, 1)).PHP_EOL;
                         $currentText = substr($currentText, 0, $pos + 1);
                         //$currentText .= PHP_EOL;
                         //$addNewLine = true;
@@ -299,6 +304,13 @@ class Template implements ITemplate
                     //if ($addNewLine) {
                     //    $currentText .= PHP_EOL;
                     //}
+
+                    // if only non-newline whitespace don't add
+                    if (preg_match("/^[^\\S\\n]*$/", $currentText)) {
+                        $currentText = '';
+                    }
+
+
                     $text = new Text($currentText, null); // .PHP_EOL
                     $result->Add($text);
                     $currentText = '';

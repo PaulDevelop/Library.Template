@@ -1,6 +1,7 @@
 <pd:template>
   <pd:layout>
 Foreach:
+    <pd:set name"foo" value="bar" />
     <pd:foreach list="%list%" item="item">
 * %item.name%
     </pd:foreach>
