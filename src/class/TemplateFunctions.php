@@ -14,11 +14,6 @@ namespace Com\PaulDevelop\Library\Template;
  */
 abstract class TemplateFunctions
 {
-    public static function upperCaseFirst($data = '')
-    {
-        return ucfirst($data);
-    }
-
     public static function subString($data = '')
     {
         // init
@@ -61,6 +56,17 @@ abstract class TemplateFunctions
     public static function lowerCase($data = '')
     {
         $value = strtolower($data);
+        return $value;
+    }
+
+    public static function upperCaseFirst($data = '')
+    {
+        return ucfirst($data);
+    }
+
+    public static function upperCase($data = '')
+    {
+        $value = strtoupper($data);
         return $value;
     }
 
