@@ -2,6 +2,7 @@
 
 namespace Com\PaulDevelop\Library\Template;
 
+use Com\PaulDevelop\Library\Common\Base;
 use Com\PaulDevelop\Library\Common\ITemplate;
 use Com\PaulDevelop\Library\Common\NodeCollection;
 
