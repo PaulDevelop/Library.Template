@@ -13,7 +13,7 @@ use Com\PaulDevelop\Library\Common\NodeCollection;
  * @author   Rüdiger Scheumann <code@pauldevelop.com>
  * @license  http://opensource.org/licenses/MIT MIT
  */
-class Template implements ITemplate
+class Template extends Base implements ITemplate
 {
     #region member
     /**
