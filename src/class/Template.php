@@ -1183,12 +1183,12 @@ class Template implements ITemplate
         }
     }
 
-    public function setTemplateFile($value = '')
+    public function setTemplateFileName($value = '')
     {
         $this->templateFileName = $value;
     }
 
-    public function getTemplateFile()
+    public function getTemplateFileName()
     {
         return $this->templateFileName;
     }

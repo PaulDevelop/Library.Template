@@ -12,7 +12,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testParseSimpleTemplate()
     {
         $template = new Template();
-        $template->setTemplateFile('test/_assets/templates/simple.template.pdt');
+        $template->setTemplateFileName('test/_assets/templates/simple.template.pdt');
         $this->assertEquals('Simple', trim($template->process()));
     }
 
@@ -22,7 +22,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testParseVariablesTemplate()
     {
         $template = new Template();
-        $template->setTemplateFile('test/_assets/templates/variables.template.pdt');
+        $template->setTemplateFileName('test/_assets/templates/variables.template.pdt');
         $template->bindVariable('variable', 'test');
         $this->assertEquals('Variables: test', trim($template->process()));
     }
@@ -33,7 +33,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testParseSetVariableTemplate()
     {
         $template = new Template();
-        $template->setTemplateFile('test/_assets/templates/setVariable.template.pdt');
+        $template->setTemplateFileName('test/_assets/templates/setVariable.template.pdt');
         $this->assertEquals('Variable: test', trim($template->process()));
     }
 
@@ -43,7 +43,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testParseIfTemplate()
     {
         $template = new Template();
-        $template->setTemplateFile('test/_assets/templates/if.template.pdt');
+        $template->setTemplateFileName('test/_assets/templates/if.template.pdt');
         $template->bindVariable('variable', 42);
         $this->assertEquals("If-Branch", trim($template->process()));
     }
@@ -54,7 +54,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testParseForeachTemplate()
     {
         $template = new Template();
-        $template->setTemplateFile('test/_assets/templates/foreach.template.pdt');
+        $template->setTemplateFileName('test/_assets/templates/foreach.template.pdt');
         $item1 = new \stdClass();
         $item1->name = 'Item 1';
         $item2 = new \stdClass();
