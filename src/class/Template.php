@@ -163,7 +163,7 @@ class Template extends Base implements ITemplate
             $tree = $this->buildNodeTree($this->parse($this->templateFileName));
         }
         catch (\Exception $e) {
-            echo 'Processing file '.$this->templateFileName.'...'.PHP_EOL;
+            echo 'Error processing file '.$this->templateFileName.'...'.PHP_EOL;
             echo $e->getMessage();
         }
 
