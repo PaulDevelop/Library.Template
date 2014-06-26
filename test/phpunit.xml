@@ -4,7 +4,7 @@
     <filter>
     </filter>
     <testsuites>
-        <testsuite name="PdLibrary.Common">
+        <testsuite name="Library.Template">
             <directory suffix=".php">.</directory>
         </testsuite>
     </testsuites>

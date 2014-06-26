@@ -171,6 +171,8 @@ class Template extends Base implements ITemplate
             $parentTree->setNode('template.layout.content', $tree->getNode('template.layout')->Nodes);
             $tree = $parentTree;
         } catch (ChildDoesNotExistException $e) {
+            echo 'Processing file '.$this->templateFileName.'...'.PHP_EOL;
+            echo $e->getMessage();
         }
 
         // process variables
