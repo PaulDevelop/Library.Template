@@ -88,4 +88,50 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     // escape with backslash:
     //  * \<pd:set name=".." value="" /> should not get processed
     //  * backslash in attributes ... value="\"test\"" ...
+
+    // <pd:if expression="%something% = 'This is a string.'">
+
+    // %backslash%
+    /**
+     * @test
+     */
+    public function testParseConstantBackslashTemplate()
+    {
+        $template = new Template();
+        $template->setTemplateFileName('test/_assets/templates/backslash.template.pdt');
+        $template->bindVariable('variable', 'User');
+        $this->assertEquals("Model\\User", trim($template->process()));
+    }
+
+    // %space%
+
+    // %newline%
+    /**
+     * @test
+     */
+    public function testParseConstantNewlineTemplate()
+    {
+        $template = new Template();
+        $template->setTemplateFileName('test/_assets/templates/newline.template.pdt');
+        ///*
+        $item1 = new \stdClass();
+        $item1->name = 'Item 1';
+        $item2 = new \stdClass();
+        $item2->name = 'Item 2';
+        $item3 = new \stdClass();
+        $item3->name = 'Item 3';
+        $list = array(
+            $item1,
+            $item2,
+            $item3
+        );
+        $template->bindVariable('list', $list);
+        //*/
+        //$template->bindVariable('variable', 'foo');
+
+        //var_dump($template->process());
+        //die;
+
+        $this->assertEquals("Item 1,\nItem 2,\nItem 3", trim($template->process()));
+    }
 }

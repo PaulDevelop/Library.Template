@@ -161,8 +161,7 @@ class Template extends Base implements ITemplate
         // parse template file
         try {
             $tree = $this->buildNodeTree($this->parse($this->templateFileName));
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo 'Error processing file '.$this->templateFileName.'...'.PHP_EOL;
             echo $e->getMessage();
         }
@@ -196,9 +195,45 @@ class Template extends Base implements ITemplate
 
         // read layout
         $content = $this->processNodes($tree->getNode('template.layout'), $parentScopeVariables, 1)->Content;
+        //echo "CONTENT".PHP_EOL;
+        //var_dump($content);
+        //die;
         $content = preg_replace('/\x{EF}\x{BB}\x{BF}/', '', $content); // remove BOMs
         $content = preg_replace('/\\\\%/', '%', $content); // remove \%
         $content = preg_replace('/\\\\</', '<', $content); // remove \<
+
+        // replace constants
+        ///*
+        $content = preg_replace_callback(
+            '/%constants\.(.*?)%/',
+            function($matches = array())
+            {
+                // init
+                $result = '';
+
+                // action
+                if ($matches[1] == 'backslash') {
+                    $result = '\\';
+                }
+                else if ($matches[1] == 'space') {
+                    $result = ' ';
+                }
+                else if ($matches[1] == 'newline') {
+                    $result = PHP_EOL;
+                }
+
+                // return
+                return $result;
+            },
+            $content
+        );
+        //*/
+
+        //var_dump($content);
+        //echo $content;
+        //die;
+
+        // return
         return $content;
     }
 
@@ -368,7 +403,12 @@ class Template extends Base implements ITemplate
             } else {
                 $matches = array();
                 $variableContent = (string)$variableContent;
-                if (preg_match('/(?<!\\\\)((?:\\\\\\\\)*)%(.*?)%/', $variableContent, $matches)) {
+                // %queryDb(%project://entity[@name=User]/property/*%)%
+                //         <pd:set name="coreLanguage" value="%api://coreLanguage[@id=%request.pageParameter.id%]#count-1%" />
+
+                //if (preg_match('/(?<!\\\\)((?:\\\\\\\\)*)%(.*?)%/', $variableContent, $matches)) {
+                if (preg_match('/(?<!\\\\)((?:\\\\\\\\)*)%([a-z0-9-_\.]+\:\/\/.*?)%/', $variableContent, $matches)) {
+                    //echo "PATTERN HANDLER".PHP_EOL;
                     foreach ($this->patternHandler as $patternHandler) {
                         $pattern = $patternHandler['pattern'];
                         $config = $patternHandler['config'];
@@ -1130,13 +1170,15 @@ class Template extends Base implements ITemplate
                 'Com\PaulDevelop\Library\Template\Template::processVariableString',
                 array_merge($parentScopeVariables, $localScopeVariables)
             );
+            //echo "VALUE".PHP_EOL;
+            //var_dump($value);
             $value = $this->pregReplaceCallback(
                 '/(?<!\\\\)((?:\\\\\\\\)*)%((?:_|[a-z])[a-z0-9-_\.\:]*)%/i',
                 $value,
                 'Com\PaulDevelop\Library\Template\Template::processVariableString',
                 array_merge($parentScopeVariables, $localScopeVariables)
             );
-
+            //var_dump($value);
 
             if (preg_match(
                 '/((?:_|[a-z])[a-z0-9-_\.]*)\((.*?)\)/msi',
@@ -1187,6 +1229,7 @@ class Template extends Base implements ITemplate
                 }
             }
             $this->registerVariable($name, $value, $parentScopeVariables, $localScopeVariables);
+            //var_dump($parentScopeVariables);
         }
     }
 
@@ -1261,11 +1304,16 @@ class Template extends Base implements ITemplate
         // init
         $result = '';
 
+        //var_dump($escapeChars);
+
         // action
         if (count($matches) > 1) {
             $variableName = $matches[1];
-            if ($variableName == 'constants.backslash') {
-                $result = '\\';
+            //if ($variableName == 'constants.backslash') {
+            //    $result = '\\';
+            if (preg_match('/^constants\./', $variableName)) {
+                $result = '%'.$variableName.'%';
+                //echo 'pVS'.PHP_EOL;
             } elseif (array_key_exists($variableName, $scopeVariables)) {
                 $result = (string)$scopeVariables[$variableName];
             } else {
