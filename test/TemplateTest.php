@@ -4,12 +4,38 @@ namespace Com\PaulDevelop\Library\Application;
 
 use Com\PaulDevelop\Library\Template\Template;
 
+class ScalarFooStorage // implements IStorage
+{
+    function get($path = '')
+    {
+        return 'bar';
+    }
+}
+
+class ArrayFooStorage // implements IStorage
+{
+    function get($path = '')
+    {
+        $item1 = new \stdClass();
+        $item1->name = 'Item 1';
+        $item2 = new \stdClass();
+        $item2->name = 'Item 2';
+        $item3 = new \stdClass();
+        $item3->name = 'Item 3';
+        return array(
+            $item1,
+            $item2,
+            $item3
+        );
+    }
+}
+
 class TemplateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function testParseSimpleTemplate()
+    public function testProcessSimpleTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/simple.template.pdt');
@@ -19,7 +45,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testParseVariablesTemplate()
+    public function testProcessVariablesTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/variables.template.pdt');
@@ -30,7 +56,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testParseSetVariableTemplate()
+    public function testProcessSetVariableTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/setVariable.template.pdt');
@@ -40,7 +66,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testParseIfTemplate()
+    public function testProcessIfTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/if.template.pdt');
@@ -51,7 +77,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testParseForeachTemplate()
+    public function testProcessForeachTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/foreach.template.pdt');
@@ -85,6 +111,29 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     //   * in <pd:set name="..." value="%functionCall()% />
     //   * inline %functionCall()%
 
+    // pattern handler
+    /**
+     * @test
+     */
+    public function testProcessScalarPatternHandlerTemplate()
+    {
+        $template = new Template();
+        $template->setTemplateFileName('test/_assets/templates/scalarPatternHandler.template.pdt');
+        $template->registerPatternHandler('/%('.'foo'.')\:\/\/(.*?)%/', new ScalarFooStorage(), 'get');
+        $this->assertEquals('bar', trim($template->process()));
+    }
+
+    /**
+     * @test
+     */
+    public function testProcessArrayPatternHandlerTemplate()
+    {
+        $template = new Template();
+        $template->setTemplateFileName('test/_assets/templates/arrayPatternHandler.template.pdt');
+        $template->registerPatternHandler('/%('.'foo'.')\:\/\/(.*?)%/', new ArrayFooStorage(), 'get');
+        $this->assertEquals("Item 1\nItem 2\nItem 3", trim($template->process()));
+    }
+
     // escape with backslash:
     //  * \<pd:set name=".." value="" /> should not get processed
     //  * backslash in attributes ... value="\"test\"" ...
@@ -95,7 +144,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testParseConstantBackslashTemplate()
+    public function testProcessConstantBackslashTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/backslash.template.pdt');
@@ -109,7 +158,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testParseConstantNewlineTemplate()
+    public function testProcessConstantNewlineTemplate()
     {
         $template = new Template();
         $template->setTemplateFileName('test/_assets/templates/newline.template.pdt');

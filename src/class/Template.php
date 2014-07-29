@@ -72,14 +72,14 @@ class Template extends Base implements ITemplate
         );
     }
 
-    public function registerFunction($name, $function = null)
+    public function registerFunction($name = '', $function = null)
     {
         if (!array_key_exists($name, $this->functions)) {
             $this->functions[$name] = $function;
         }
     }
 
-    public function registerCallback($name, $object = null, $function = '')
+    public function registerCallback($name = '', $object = null, $function = '')
     {
         if (!array_key_exists($name, $this->functions)) {
             $this->functions[$name] = array($object, $function);
@@ -409,6 +409,7 @@ class Template extends Base implements ITemplate
                 //if (preg_match('/(?<!\\\\)((?:\\\\\\\\)*)%(.*?)%/', $variableContent, $matches)) {
                 if (preg_match('/(?<!\\\\)((?:\\\\\\\\)*)%([a-z0-9-_\.]+\:\/\/.*?)%/', $variableContent, $matches)) {
                     //echo "PATTERN HANDLER".PHP_EOL;
+                    //var_dump($this->patternHandler);
                     foreach ($this->patternHandler as $patternHandler) {
                         $pattern = $patternHandler['pattern'];
                         $config = $patternHandler['config'];
@@ -416,6 +417,7 @@ class Template extends Base implements ITemplate
                         preg_match_all($pattern, $variableContent, $matches, PREG_SET_ORDER);
                         foreach ($matches as $matchSet) {
                             $path = $matchSet[2];
+                            //echo $path.PHP_EOL;
                             // TODO: check, if path contains %variables%, already available in $this->_variables
                             $path = $this->pregReplaceCallback(
                                 '/(?<!\\\\)((?:\\\\\\\\)*)%((?:_|[a-z])[a-z0-9-_\.\:]*)%/i',
@@ -427,6 +429,7 @@ class Template extends Base implements ITemplate
                                 )
                             );
                             $obj = call_user_func($config, $path);
+                            //var_dump($obj);
 
                             // TODO letzte aenderung: always clean up parentScopeVariables
                             foreach ($parentScopeVariables as $key2 => $value2) {
@@ -453,15 +456,19 @@ class Template extends Base implements ITemplate
                                     }
                                 }
 
-                                foreach ($obj as $key => $value) {
-                                    if (is_object($value)) {
-                                        foreach ($value as $subKey => $subValue) {
-                                            $parentScopeVariables[$variableName.'['.$key.'].'.$subKey] =
-                                                (string)$subValue;
+                                if (is_array($obj) || is_object($obj)) {
+                                    foreach ($obj as $key => $value) {
+                                        if (is_object($value)) {
+                                            foreach ($value as $subKey => $subValue) {
+                                                $parentScopeVariables[$variableName.'['.$key.'].'.$subKey] =
+                                                    (string)$subValue;
+                                            }
+                                        } else {
+                                            $parentScopeVariables[$variableName.'.'.$key] = (string)$value;
                                         }
-                                    } else {
-                                        $parentScopeVariables[$variableName.'.'.$key] = (string)$value;
                                     }
+                                } else {
+                                    $parentScopeVariables[$variableName] = (string)$obj;
                                 }
                             }
                         }
@@ -1283,6 +1290,35 @@ class Template extends Base implements ITemplate
         $functionName = $matches[1];
 
         // check, if function is defined in class TemplateFunctions
+//        if ($functionName == 'queryDb') {
+//            $this->registerVariable(
+//                $name,
+//                $parameter,
+//                $parentScopeVariables,
+//                $localScopeVariables
+//            );
+//        } elseif ($functionName == 'getArrayLength') {
+//            $allParameters = array_merge(
+//                $parentScopeVariables,
+//                $localScopeVariables
+//            );
+//            $counter = 0;
+//            $currentIndex = '';
+//            foreach ($allParameters as $k => $v) {
+//                if (preg_match(
+//                    '/^'.$parameter.'\[(.*?)\]/i',
+//                    $k,
+//                    $matches
+//                )
+//                ) {
+//                    if ($matches[1] != $currentIndex) {
+//                        $currentIndex = $matches[1];
+//                        $counter++;
+//                    }
+//                }
+//            }
+//            $value = $counter;
+//        } else
         if (in_array(
             $functionName,
             get_class_methods('\Com\PaulDevelop\Library\Template\TemplateFunctions')
