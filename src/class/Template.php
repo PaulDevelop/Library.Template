@@ -558,7 +558,8 @@ class Template extends Base implements ITemplate
             } else {
                 if ($callback == 'Com\PaulDevelop\Library\Template\Template::processFunctionCall') {
                     $result = preg_replace(
-                        '/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.$matches[3][$count].'\)%/',
+                        //'/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.$matches[3][$count].'\)%/',
+                        '/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.str_replace('\\', '\\\\', $matches[3][$count]).'\)%/',
                         call_user_func($callback, $parameter, array(null, $match), $matches[3][$count]),
                         $result
                     );
@@ -1331,7 +1332,7 @@ class Template extends Base implements ITemplate
             }
         }
 
-        // reutnr
+        // return
         return $result;
     }
 
