@@ -1,36 +1,12 @@
 <?php
 
-namespace Com\PaulDevelop\Library\Application;
+namespace Com\PaulDevelop\Library\Template;
 
-use Com\PaulDevelop\Library\Template\Template;
+use /** @noinspection PhpUndefinedClassInspection */
+    PHPUnit_Framework_TestCase;
 
-class ScalarFooStorage // implements IStorage
-{
-    function get($path = '')
-    {
-        return 'bar';
-    }
-}
-
-class ArrayFooStorage // implements IStorage
-{
-    function get($path = '')
-    {
-        $item1 = new \stdClass();
-        $item1->name = 'Item 1';
-        $item2 = new \stdClass();
-        $item2->name = 'Item 2';
-        $item3 = new \stdClass();
-        $item3->name = 'Item 3';
-        return array(
-            $item1,
-            $item2,
-            $item3
-        );
-    }
-}
-
-class TemplateTest extends \PHPUnit_Framework_TestCase
+/** @noinspection PhpUndefinedClassInspection */
+class TemplateTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @test
@@ -38,7 +14,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessSimpleTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/simple.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/simple.template.pdt');
         $this->assertEquals('Simple', trim($template->process()));
     }
 
@@ -48,7 +24,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessVariablesTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/variables.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/variables.template.pdt');
         $template->bindVariable('variable', 'test');
         $this->assertEquals('Variables: test', trim($template->process()));
     }
@@ -59,7 +35,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessSetVariableTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/setVariable.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/setVariable.template.pdt');
         $this->assertEquals('Variable: test', trim($template->process()));
     }
 
@@ -69,7 +45,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessIfTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/if.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/if.template.pdt');
         $template->bindVariable('variable', 42);
         $this->assertEquals("If-Branch", trim($template->process()));
     }
@@ -80,7 +56,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessForeachTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/foreach.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/foreach.template.pdt');
         $item1 = new \stdClass();
         $item1->name = 'Item 1';
         $item2 = new \stdClass();
@@ -118,7 +94,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessScalarPatternHandlerTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/scalarPatternHandler.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/scalarPatternHandler.template.pdt');
         $template->registerPatternHandler('/%('.'foo'.')\:\/\/(.*?)%/', new ScalarFooStorage(), 'get');
         $this->assertEquals('bar', trim($template->process()));
     }
@@ -129,7 +105,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessArrayPatternHandlerTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/arrayPatternHandler.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/arrayPatternHandler.template.pdt');
         $template->registerPatternHandler('/%('.'foo'.')\:\/\/(.*?)%/', new ArrayFooStorage(), 'get');
         $this->assertEquals("Item 1\nItem 2\nItem 3", trim($template->process()));
     }
@@ -147,7 +123,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessConstantBackslashTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/backslash.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/backslash.template.pdt');
         $template->bindVariable('variable', 'User');
         $this->assertEquals("Model\\User", trim($template->process()));
     }
@@ -161,7 +137,7 @@ class TemplateTest extends \PHPUnit_Framework_TestCase
     public function testProcessConstantNewlineTemplate()
     {
         $template = new Template();
-        $template->setTemplateFileName('test/_assets/templates/newline.template.pdt');
+        $template->setTemplateFileName('project/test/_assets/templates/newline.template.pdt');
         ///*
         $item1 = new \stdClass();
         $item1->name = 'Item 1';

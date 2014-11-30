@@ -851,6 +851,10 @@ class Template extends Base implements ITemplate
             return ((int)$lhValue < (int)$rhValue);
         } elseif ($operator == ">") {
             return ((int)$lhValue > (int)$rhValue);
+        } elseif ($operator == "<=") {
+            return ((int)$lhValue <= (int)$rhValue);
+        } elseif ($operator == ">=") {
+            return ((int)$lhValue >= (int)$rhValue);
         } elseif ($operator == "!=") {
             return ($lhValue != $rhValue);
         }
