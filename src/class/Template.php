@@ -86,6 +86,18 @@ class Template extends Base implements ITemplate
         }
     }
 
+    public function registerCallbackObject($object = null)
+    {
+//        $class = get_class($object);
+//        $rc = new \ReflectionClass($class);
+        $rc = new \ReflectionClass($object);
+        $methods = $rc->getMethods(\ReflectionMethod::IS_PUBLIC);
+        /** @var \ReflectionMethod $method */
+        foreach ($methods as $method) {
+            $this->registerCallback($method->getName(), $object, $method->getName());
+        }
+    }
+
     /**
      * Bind template variable to content.
      *
@@ -97,12 +109,10 @@ class Template extends Base implements ITemplate
         if (!array_key_exists($variableName, $this->bindingVariables)) {
             if (is_array($content)) {
                 $this->bindArray('', $variableName, $content);
-            } else {
-                if (is_object($content)) {
-                    $this->bindObject('', $variableName, $content);
-                } else { // assume scalar value
-                    $this->bindingVariables[$variableName] = $content;
-                }
+            } elseif (is_object($content)) {
+                $this->bindObject('', $variableName, $content);
+            } else { // assume scalar value
+                $this->bindingVariables[$variableName] = $content;
             }
         }
     }
@@ -116,12 +126,11 @@ class Template extends Base implements ITemplate
         for ($i = 0; $i < count($content); $i++) {
             if (is_array($content[$i])) {
                 $this->bindArray($path.'['.$i.']', 'items', $content[$i]);
-            } else {
-                if (is_object($content[$i])) {
-                    $this->bindObject($path.'['.$i.']', '', $content[$i]);
-                } else { // assume scalar value
-                    $this->bindingVariables[$path.'['.$i.'].value'] = $content[$i];
-                }
+            } elseif (is_object($content[$i])) {
+                $this->bindObject($path.'['.$i.']', '', $content[$i]);
+            } else { // assume scalar value
+                $this->bindingVariables[$path.'['.$i.'].value'] = $content[$i];
+
             }
         }
     }
@@ -136,12 +145,10 @@ class Template extends Base implements ITemplate
         foreach ($properties as $name => $property) {
             if (is_array($property)) {
                 $this->bindArray($path.'.'.$name, '', $property);
-            } else {
-                if (is_object($property)) {
-                    $this->bindObject($path.'.'.$name, '', $property);
-                } else { // assume scalar value
-                    $this->bindingVariables[$path.'.'.$name] = $property;
-                }
+            } elseif (is_object($property)) {
+                $this->bindObject($path.'.'.$name, '', $property);
+            } else { // assume scalar value
+                $this->bindingVariables[$path.'.'.$name] = $property;
             }
         }
     }
@@ -206,19 +213,16 @@ class Template extends Base implements ITemplate
         ///*
         $content = preg_replace_callback(
             '/%constants\.(.*?)%/',
-            function($matches = array())
-            {
+            function ($matches = array()) {
                 // init
                 $result = '';
 
                 // action
                 if ($matches[1] == 'backslash') {
                     $result = '\\';
-                }
-                else if ($matches[1] == 'space') {
+                } else if ($matches[1] == 'space') {
                     $result = ' ';
-                }
-                else if ($matches[1] == 'newline') {
+                } else if ($matches[1] == 'newline') {
                     $result = PHP_EOL;
                 }
 
@@ -558,8 +562,9 @@ class Template extends Base implements ITemplate
             } else {
                 if ($callback == 'Com\PaulDevelop\Library\Template\Template::processFunctionCall') {
                     $result = preg_replace(
-                        //'/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.$matches[3][$count].'\)%/',
-                        '/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.str_replace('\\', '\\\\', $matches[3][$count]).'\)%/',
+                    //'/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.$matches[3][$count].'\)%/',
+                        '/(?<!\\\\)((?:\\\\\\\\)*)%'.str_replace('/', '\/', $match).'\('.str_replace('\\', '\\\\',
+                            $matches[3][$count]).'\)%/',
                         call_user_func($callback, $parameter, array(null, $match), $matches[3][$count]),
                         $result
                     );
