@@ -153,6 +153,27 @@ class Template extends Base implements ITemplate
         }
     }
 
+    public function readVariable($variableName = '')
+    {
+        // init
+        $result = '';
+
+        // action
+        if (array_key_exists($variableName, $this->bindingVariables)) {
+//            if (is_array($content)) {
+//                $this->bindArray('', $variableName, $content);
+//            } elseif (is_object($content)) {
+//                $this->bindObject('', $variableName, $content);
+//            } else { // assume scalar value
+//                $this->bindingVariables[$variableName] = $content;
+//            }
+            $result = $this->bindingVariables[$variableName];
+        }
+
+        // return
+        return $result;
+    }
+
     /**
      * Process template.
      *
