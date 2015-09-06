@@ -37,6 +37,15 @@ abstract class TemplateFunctions
         return $value;
     }
 
+    public static function modulo($data = '')
+    {
+        $chunks = preg_split('/,/', $data);
+        if (count($chunks) > 1) {
+            $value = (int)$chunks[0] % (int)$chunks[1];
+        }
+        return $value;
+    }
+
     public static function add($data = '')
     {
         $value = 0;
