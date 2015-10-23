@@ -1388,6 +1388,7 @@ class Template extends Base implements ITemplate
             }
         }
         $result = $escapeChars.$result;
+        $result = addcslashes($result, '$');
 
         // return
         return $result;
