@@ -906,7 +906,30 @@ class Template extends Base implements ITemplate
             $list = $foreachNode->GetAttribute('list')->Value;
             $item = $foreachNode->GetAttribute('item')->Value;
 
-            //$listName = $list;
+            // check, if function name is in list attribute value
+            if (preg_match(
+                '/((?:_|[a-z])[a-z0-9-_\.]*)\((.*?)\)/msi',
+                $list,
+                $matches
+            )
+            ) {
+                $functionName = $matches[1];
+                $parameter = $matches[2];
+
+                if (in_array(
+                    $functionName,
+                    get_class_methods('\Com\PaulDevelop\Library\Template\TemplateFunctions')
+                )
+                ) {
+                    // check, if function is defined in class TemplateFunctions
+                    $list = TemplateFunctions::$functionName(
+                        $parameter
+                    );
+                } elseif (array_key_exists($functionName, $this->functions)) {
+                    // check functions array
+                    $list = call_user_func($this->functions[$functionName], $parameter, $parentScopeVariables, true);
+                }
+            }
 
             preg_match('/(?<!\\\\)((?:\\\\\\\\)*)%(.*?)%/', $list, $matches);
             $list = $this->processVariableArray(array_merge($parentScopeVariables, $localScopeVariables), $matches);
