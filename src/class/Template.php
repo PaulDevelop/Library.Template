@@ -679,10 +679,10 @@ class Template extends Base implements ITemplate
 
         // action
         if ($ifNode != null
-            && $ifNode->HasAttribute('expression')
+            && $ifNode->hasAttribute('expression')
         ) {
             // read expression
-            $expression = $ifNode->GetAttribute('expression')->Value;
+            $expression = $ifNode->getAttribute('expression')->Value;
             $possibilities = array();
 
             // exists always; may be overwritten
@@ -899,12 +899,12 @@ class Template extends Base implements ITemplate
 
         // action
         if ($foreachNode != null
-            && $foreachNode->HasAttribute('list')
-            && $foreachNode->HasAttribute('item')
+            && $foreachNode->hasAttribute('list')
+            && $foreachNode->hasAttribute('item')
         ) {
 
-            $list = $foreachNode->GetAttribute('list')->Value;
-            $item = $foreachNode->GetAttribute('item')->Value;
+            $list = $foreachNode->getAttribute('list')->Value;
+            $item = $foreachNode->getAttribute('item')->Value;
 
             // check, if function name is in list attribute value
             if (preg_match(
@@ -937,7 +937,7 @@ class Template extends Base implements ITemplate
             if (count($list) > 0 && count($list[0]) == 0) {
                 $chunks = preg_split(
                     '/,/',
-                    $foreachNode->GetAttribute('list')->Value
+                    $foreachNode->getAttribute('list')->Value
                 );
                 if (count($chunks) > 0) {
                     $list = array();
@@ -1109,11 +1109,11 @@ class Template extends Base implements ITemplate
 
         // action
         if ($includeNode != null
-            && $includeNode->HasAttribute('file')
+            && $includeNode->hasAttribute('file')
         ) {
 
             // read attribute "file", try to locate file in current directory
-            $fileName = $includeNode->GetAttribute('file')->Value;
+            $fileName = $includeNode->getAttribute('file')->Value;
             $fullFileName = dirname($this->templateFileName).DIRECTORY_SEPARATOR.$fileName;
 
             // try to locate file in template include path
@@ -1217,8 +1217,8 @@ class Template extends Base implements ITemplate
     ) {
         // action
         if ($setNode != null
-            && $setNode->HasAttribute('name')
-            && $setNode->HasAttribute('value')
+            && $setNode->hasAttribute('name')
+            && $setNode->hasAttribute('value')
         ) {
 
             $name = $setNode->getAttribute('name')->Value;
