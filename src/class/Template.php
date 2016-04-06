@@ -103,10 +103,11 @@ class Template extends Base implements ITemplate
      *
      * @param string $variableName
      * @param mixed  $content
+     * @param bool   $force
      */
-    public function bindVariable($variableName = '', $content = null)
+    public function bindVariable($variableName = '', $content = null, $force = false)
     {
-        if (!array_key_exists($variableName, $this->bindingVariables)) {
+        if ($force || !array_key_exists($variableName, $this->bindingVariables)) {
             if (is_array($content)) {
                 $this->bindArray('', $variableName, $content);
             } elseif (is_object($content)) {
