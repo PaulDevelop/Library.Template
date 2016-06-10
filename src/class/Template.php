@@ -313,7 +313,7 @@ class Template extends Base implements ITemplate
         $stringIsOpen = false;
 
         // action
-        $content = implode('', file($fullFileName));
+        $content = implode('', file(realpath($fullFileName)));
 
         for ($i = 0; $i < strlen($content); $i++) {
             $prevChar = ($i > 0) ? substr($content, $i - 1, 1) : '';
